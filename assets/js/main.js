@@ -52,10 +52,16 @@
     });
   }
 
-  // Hero background: a slow swirling field of wavy concentric lines.
-  // Signature motion for the hero stage, behind the portrait and headline.
-  var canvas = document.getElementById("heroCanvas");
-  if (canvas && canvas.getContext) {
+  // Signature motion: a slow swirling field of wavy concentric lines.
+  // Used behind the hero stage and reprised, more subtly, on the closing
+  // CTA band, so the page opens and closes on the same gesture.
+  var initSwirl = function (canvasId, opts) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas || !canvas.getContext) return;
+
+    var cyRatio = opts && opts.cyRatio !== undefined ? opts.cyRatio : 0.42;
+    var maxAlpha = opts && opts.maxAlpha !== undefined ? opts.maxAlpha : 0.14;
+
     var ctx = canvas.getContext("2d");
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var width = 0;
@@ -78,7 +84,7 @@
           k: 3 + (i % 4),
           phase: i * 0.9,
           speed: (i % 2 === 0 ? 1 : -1) * (0.08 + t * 0.1),
-          alpha: 0.14 - t * 0.09
+          alpha: maxAlpha - t * (maxAlpha * 0.64)
         });
       }
     };
@@ -98,7 +104,7 @@
     var draw = function (time) {
       ctx.clearRect(0, 0, width, height);
       var cx = width / 2;
-      var cy = height * 0.42;
+      var cy = height * cyRatio;
       var scaleY = 0.62;
 
       for (var i = 0; i < rings.length; i++) {
@@ -147,7 +153,7 @@
     window.addEventListener("resize", resize);
 
     if ("IntersectionObserver" in window) {
-      var heroObserver = new IntersectionObserver(
+      var obs = new IntersectionObserver(
         function (entries) {
           entries.forEach(function (entry) {
             if (entry.isIntersecting) start();
@@ -156,7 +162,10 @@
         },
         { threshold: 0 }
       );
-      heroObserver.observe(canvas.parentElement);
+      obs.observe(canvas.parentElement);
     }
-  }
+  };
+
+  initSwirl("heroCanvas", { cyRatio: 0.42, maxAlpha: 0.14 });
+  initSwirl("ctaCanvas", { cyRatio: 0.5, maxAlpha: 0.22 });
 })();
