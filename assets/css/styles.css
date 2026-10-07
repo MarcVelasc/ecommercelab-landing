@@ -235,7 +235,7 @@ h2.heading {
   position: fixed;
   inset: var(--nav-h) 0 0 0;
   background: var(--bg);
-  z-index: 49;
+  z-index: 55;
   transform: translateY(-8px);
   opacity: 0;
   pointer-events: none;
