@@ -509,6 +509,12 @@ sup { font-size: 0.65em; }
   font-weight: 600;
 }
 
+.goja-logo {
+  height: 34px;
+  width: auto;
+  margin: 0 auto 2px;
+}
+
 /* ============================================================ Logistics ============================================================ */
 .params-grid {
   display: grid;
